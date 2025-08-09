@@ -1,7 +1,15 @@
-import { Controller, Get, Post, Delete, Body, Param } from '@nestjs/common'
-import { LessonsService } from './lessons.service'
-import { CreateLessonDto } from './dto/create-lesson.dto'
-import { Lesson } from './entities/lesson.entity'
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+} from '@nestjs/common';
+import { LessonsService } from './lessons.service';
+import { CreateLessonDto } from './dto/create-lesson.dto';
+import { Lesson } from './entities/lesson.entity';
 
 @Controller('api/lessons')
 export class LessonsController {
@@ -9,16 +17,24 @@ export class LessonsController {
 
   @Post()
   create(@Body() createLessonDto: CreateLessonDto): Promise<Lesson> {
-    return this.lessonsService.create(createLessonDto)
+    return this.lessonsService.create(createLessonDto);
   }
 
   @Get()
   findAll(): Promise<Lesson[]> {
-    return this.lessonsService.findAll()
+    return this.lessonsService.findAll();
+  }
+
+  @Put(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateLessonDto: CreateLessonDto,
+  ): Promise<Lesson> {
+    return this.lessonsService.update(id, updateLessonDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string): Promise<void> {
-    return this.lessonsService.remove(id)
+    return this.lessonsService.remove(id);
   }
-} 
+}

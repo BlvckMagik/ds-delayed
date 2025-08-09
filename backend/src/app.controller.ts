@@ -1,9 +1,9 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get } from '@nestjs/common';
 
 @Controller()
 export class AppController {
   @Get()
   getHello(): string {
-    return 'DS Delayed API is running!'
+    return 'DS Delayed API is running!';
   }
-} 
+}

@@ -16,9 +16,11 @@ import {
   DialogActions,
   Button,
 } from '@mui/material'
-import { Delete as DeleteIcon } from '@mui/icons-material'
+import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material'
 import { useState } from 'react'
 import { useGetLessonsQuery, useDeleteLessonMutation } from '@/shared/store/api'
+import { EditLessonDialog } from '@/features/lessons/edit'
+import { Lesson } from '@/entities/lesson'
 
 const dayNames = [
   'Неділя',
@@ -35,6 +37,8 @@ export function LessonsList() {
   const [deleteLesson] = useDeleteLessonMutation()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [lessonToDelete, setLessonToDelete] = useState<string | null>(null)
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [lessonToEdit, setLessonToEdit] = useState<Lesson | null>(null)
 
   const handleDeleteClick = (lessonId: string) => {
     setLessonToDelete(lessonId)
@@ -56,6 +60,16 @@ export function LessonsList() {
   const handleDeleteCancel = () => {
     setDeleteDialogOpen(false)
     setLessonToDelete(null)
+  }
+
+  const handleEditClick = (lesson: Lesson) => {
+    setLessonToEdit(lesson)
+    setEditDialogOpen(true)
+  }
+
+  const handleEditClose = () => {
+    setEditDialogOpen(false)
+    setLessonToEdit(null)
   }
 
   if (isLoading) {
@@ -94,6 +108,15 @@ export function LessonsList() {
                 <ListItemSecondaryAction>
                   <IconButton
                     edge="end"
+                    aria-label="редагувати"
+                    onClick={() => handleEditClick(lesson)}
+                    color="primary"
+                    sx={{ mr: 1 }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    edge="end"
                     aria-label="видалити"
                     onClick={() => handleDeleteClick(lesson.id)}
                     color="error"
@@ -123,6 +146,12 @@ export function LessonsList() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <EditLessonDialog
+        open={editDialogOpen}
+        lesson={lessonToEdit}
+        onClose={handleEditClose}
+      />
     </>
   )
 } 

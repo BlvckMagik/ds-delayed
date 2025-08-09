@@ -46,4 +46,14 @@ export class LessonsService {
     }
     await this.lessonsRepository.remove(lesson);
   }
+
+  async update(id: string, updateLessonDto: CreateLessonDto): Promise<Lesson> {
+    const lesson = await this.findOne(id);
+    if (!lesson) {
+      throw new NotFoundException(`Заняття з ID ${id} не знайдено`);
+    }
+
+    Object.assign(lesson, updateLessonDto);
+    return this.lessonsRepository.save(lesson);
+  }
 }

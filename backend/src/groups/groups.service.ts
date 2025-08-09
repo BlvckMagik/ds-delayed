@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
-import { Group } from './entities/group.entity'
-import { CreateGroupDto } from './dto/create-group.dto'
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Group } from './entities/group.entity';
+import { CreateGroupDto } from './dto/create-group.dto';
 
 @Injectable()
 export class GroupsService {
@@ -12,23 +12,33 @@ export class GroupsService {
   ) {}
 
   async create(createGroupDto: CreateGroupDto): Promise<Group> {
-    const group = this.groupsRepository.create(createGroupDto)
-    return this.groupsRepository.save(group)
+    const group = this.groupsRepository.create(createGroupDto);
+    return this.groupsRepository.save(group);
   }
 
   async findAll(): Promise<Group[]> {
-    return this.groupsRepository.find()
+    return this.groupsRepository.find();
   }
 
   async findOne(id: string): Promise<Group> {
-    return this.groupsRepository.findOne({ where: { id } })
+    return this.groupsRepository.findOne({ where: { id } });
   }
 
   async remove(id: string): Promise<void> {
-    const group = await this.findOne(id)
+    const group = await this.findOne(id);
     if (!group) {
-      throw new NotFoundException(`Група з ID ${id} не знайдена`)
+      throw new NotFoundException(`Група з ID ${id} не знайдена`);
     }
-    await this.groupsRepository.remove(group)
+    await this.groupsRepository.remove(group);
   }
-} 
+
+  async update(id: string, updateGroupDto: CreateGroupDto): Promise<Group> {
+    const group = await this.findOne(id);
+    if (!group) {
+      throw new NotFoundException(`Група з ID ${id} не знайдена`);
+    }
+
+    Object.assign(group, updateGroupDto);
+    return this.groupsRepository.save(group);
+  }
+}

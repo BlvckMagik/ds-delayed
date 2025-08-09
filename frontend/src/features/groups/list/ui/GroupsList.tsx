@@ -16,15 +16,19 @@ import {
   DialogActions,
   Button,
 } from '@mui/material'
-import { Delete as DeleteIcon } from '@mui/icons-material'
+import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material'
 import { useState } from 'react'
 import { useGetGroupsQuery, useDeleteGroupMutation } from '@/shared/store/api'
+import { EditGroupDialog } from '@/features/groups/edit'
+import { Group } from '@/entities/group'
 
 export function GroupsList() {
   const { data: groups, isLoading, error } = useGetGroupsQuery()
   const [deleteGroup] = useDeleteGroupMutation()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [groupToDelete, setGroupToDelete] = useState<string | null>(null)
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [groupToEdit, setGroupToEdit] = useState<Group | null>(null)
 
   const handleDeleteClick = (groupId: string) => {
     setGroupToDelete(groupId)
@@ -46,6 +50,16 @@ export function GroupsList() {
   const handleDeleteCancel = () => {
     setDeleteDialogOpen(false)
     setGroupToDelete(null)
+  }
+
+  const handleEditClick = (group: Group) => {
+    setGroupToEdit(group)
+    setEditDialogOpen(true)
+  }
+
+  const handleEditClose = () => {
+    setEditDialogOpen(false)
+    setGroupToEdit(null)
   }
 
   if (isLoading) {
@@ -84,6 +98,15 @@ export function GroupsList() {
                 <ListItemSecondaryAction>
                   <IconButton
                     edge="end"
+                    aria-label="редагувати"
+                    onClick={() => handleEditClick(group)}
+                    color="primary"
+                    sx={{ mr: 1 }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    edge="end"
                     aria-label="видалити"
                     onClick={() => handleDeleteClick(group.id)}
                     color="error"
@@ -113,6 +136,12 @@ export function GroupsList() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <EditGroupDialog
+        open={editDialogOpen}
+        group={groupToEdit}
+        onClose={handleEditClose}
+      />
     </>
   )
 } 

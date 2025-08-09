@@ -40,6 +40,14 @@ export const api = createApi({
       }),
       invalidatesTags: ['Groups'],
     }),
+    updateGroup: builder.mutation<Group, { id: string; data: Omit<Group, 'id'> }>({
+      query: ({ id, data }) => ({
+        url: `groups/${id}`,
+        method: 'PUT',
+        body: data,
+      }),
+      invalidatesTags: ['Groups'],
+    }),
     getLessons: builder.query<Lesson[], void>({
       query: () => 'lessons',
       providesTags: ['Lessons'],
@@ -59,14 +67,24 @@ export const api = createApi({
       }),
       invalidatesTags: ['Lessons'],
     }),
+    updateLesson: builder.mutation<Lesson, { id: string; data: Omit<Lesson, 'id' | 'group'> }>({
+      query: ({ id, data }) => ({
+        url: `lessons/${id}`,
+        method: 'PUT',
+        body: data,
+      }),
+      invalidatesTags: ['Lessons'],
+    }),
   }),
 })
 
 export const {
   useGetGroupsQuery,
   useCreateGroupMutation,
+  useUpdateGroupMutation,
   useDeleteGroupMutation,
   useGetLessonsQuery,
   useCreateLessonMutation,
+  useUpdateLessonMutation,
   useDeleteLessonMutation,
 } = api 

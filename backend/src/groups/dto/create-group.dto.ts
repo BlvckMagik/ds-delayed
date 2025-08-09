@@ -1,5 +1,5 @@
 export class CreateGroupDto {
-  name: string
-  meetLink: string
-  chatId: string
-} 
+  name: string;
+  meetLink: string;
+  chatId: string;
+}
