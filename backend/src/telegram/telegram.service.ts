@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common'
 import { Cron, CronExpression } from '@nestjs/schedule'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import TelegramBot from 'node-telegram-bot-api'
+const TelegramBot = require('node-telegram-bot-api')
 import { format, formatInTimeZone } from 'date-fns-tz'
 import { uk } from 'date-fns/locale'
 import { Lesson } from '../lessons/entities/lesson.entity'
@@ -11,7 +11,7 @@ import { Group } from '../groups/entities/group.entity'
 @Injectable()
 export class TelegramService {
   private readonly logger = new Logger(TelegramService.name)
-  private bot: TelegramBot | null = null
+  private bot: any = null
   private readonly botToken = process.env.TELEGRAM_BOT_TOKEN
 
   constructor(
