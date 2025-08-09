@@ -2,11 +2,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const TelegramBot = require('node-telegram-bot-api');
 import { format, formatInTimeZone } from 'date-fns-tz';
 import { uk } from 'date-fns/locale';
 import { Lesson } from '../lessons/entities/lesson.entity';
 import { Group } from '../groups/entities/group.entity';
+import { LlmService } from '../llm/llm.service';
 
 @Injectable()
 export class TelegramService {
@@ -19,6 +21,7 @@ export class TelegramService {
     private lessonsRepository: Repository<Lesson>,
     @InjectRepository(Group)
     private groupsRepository: Repository<Group>,
+    private llmService: LlmService,
   ) {
     if (!this.botToken) {
       this.logger.error('TELEGRAM_BOT_TOKEN не налаштований');
@@ -58,7 +61,7 @@ export class TelegramService {
     if (!this.bot) return;
 
     try {
-      const message = this.createLessonMessage(lesson);
+      const message = await this.createLessonMessage(lesson);
 
       // Надсилаємо повідомлення в чат групи
       await this.bot.sendMessage(lesson.group.chatId, message, {
@@ -75,7 +78,7 @@ export class TelegramService {
     }
   }
 
-  private createLessonMessage(lesson: Lesson): string {
+  private async createLessonMessage(lesson: Lesson): Promise<string> {
     const now = new Date();
     const kievTime = formatInTimeZone(now, 'Europe/Kiev', 'HH:mm', {
       locale: uk,
@@ -95,6 +98,9 @@ export class TelegramService {
     ];
     const dayName = dayNames[lesson.dayOfWeek];
 
+    // Генеруємо побажання за допомогою LLM
+    const wish = await this.llmService.generateWish();
+
     return `
 🔔 <b>Нагадування про заняття</b>
 
@@ -107,7 +113,7 @@ export class TelegramService {
 
 🔗 <b>Посилання на Meet:</b> ${lesson.group.meetLink}
 
-Приєднуйтесь до заняття!
+${wish}
     `.trim();
   }
 }

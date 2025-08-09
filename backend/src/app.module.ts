@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { GroupsModule } from './groups/groups.module';
 import { LessonsModule } from './lessons/lessons.module';
 import { TelegramModule } from './telegram/telegram.module';
+import { LlmModule } from './llm/llm.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { TelegramModule } from './telegram/telegram.module';
     GroupsModule,
     LessonsModule,
     TelegramModule,
+    LlmModule,
   ],
   controllers: [AppController],
   providers: [AppService],
