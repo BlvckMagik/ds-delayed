@@ -23,9 +23,13 @@ export class TelegramService {
   @Cron(CronExpression.EVERY_MINUTE)
   async handleScheduledLessons() {
     const now = new Date()
+    const currentTime = format(now, 'HH:mm')
+    const currentDayOfWeek = now.getDay()
+
     const lessons = await this.lessonsRepository.find({
       where: {
-        time: LessThanOrEqual(now.toISOString()),
+        dayOfWeek: currentDayOfWeek,
+        time: currentTime,
       },
       relations: ['group'],
     })
@@ -33,7 +37,6 @@ export class TelegramService {
     for (const lesson of lessons) {
       if (lesson.group) {
         await this.sendLessonReminder(lesson)
-        await this.lessonsRepository.remove(lesson)
       }
     }
   }
@@ -59,16 +62,20 @@ export class TelegramService {
   }
 
   private createLessonMessage(lesson: Lesson): string {
-    const lessonTime = new Date(lesson.time)
-    const kievTime = formatInTimeZone(lessonTime, 'Europe/Kiev', 'PPp', { locale: uk })
-    const berlinTime = formatInTimeZone(lessonTime, 'Europe/Berlin', 'PPp', { locale: uk })
+    const now = new Date()
+    const kievTime = formatInTimeZone(now, 'Europe/Kiev', 'HH:mm', { locale: uk })
+    const berlinTime = formatInTimeZone(now, 'Europe/Berlin', 'HH:mm', { locale: uk })
+    
+    const dayNames = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця', 'Субота']
+    const dayName = dayNames[lesson.dayOfWeek]
     
     return `
 🔔 <b>Нагадування про заняття</b>
 
 📚 <b>${lesson.name}</b>
 
-⏰ <b>Час:</b>
+📅 <b>День:</b> ${dayName}
+⏰ <b>Час:</b> ${lesson.time}
 🇺🇦 Київ: ${kievTime}
 🇩🇪 Берлін: ${berlinTime}
 

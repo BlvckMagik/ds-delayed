@@ -10,6 +10,7 @@ export interface Group {
 export interface Lesson {
   id: string
   name: string
+  dayOfWeek: number
   time: string
   groupId: string
   group?: Group
@@ -32,15 +33,29 @@ export const api = createApi({
       }),
       invalidatesTags: ['Groups'],
     }),
+    deleteGroup: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `groups/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Groups'],
+    }),
     getLessons: builder.query<Lesson[], void>({
       query: () => 'lessons',
       providesTags: ['Lessons'],
     }),
-    createLesson: builder.mutation<Lesson, Omit<Lesson, 'id'>>({
+    createLesson: builder.mutation<Lesson, Omit<Lesson, 'id' | 'group'>>({
       query: (lesson) => ({
         url: 'lessons',
         method: 'POST',
         body: lesson,
+      }),
+      invalidatesTags: ['Lessons'],
+    }),
+    deleteLesson: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `lessons/${id}`,
+        method: 'DELETE',
       }),
       invalidatesTags: ['Lessons'],
     }),
@@ -50,6 +65,8 @@ export const api = createApi({
 export const {
   useGetGroupsQuery,
   useCreateGroupMutation,
+  useDeleteGroupMutation,
   useGetLessonsQuery,
   useCreateLessonMutation,
+  useDeleteLessonMutation,
 } = api 

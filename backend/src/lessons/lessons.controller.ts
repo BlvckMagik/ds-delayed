@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common'
+import { Controller, Get, Post, Delete, Body, Param } from '@nestjs/common'
 import { LessonsService } from './lessons.service'
 import { CreateLessonDto } from './dto/create-lesson.dto'
 import { Lesson } from './entities/lesson.entity'
@@ -15,5 +15,10 @@ export class LessonsController {
   @Get()
   findAll(): Promise<Lesson[]> {
     return this.lessonsService.findAll()
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string): Promise<void> {
+    return this.lessonsService.remove(id)
   }
 } 

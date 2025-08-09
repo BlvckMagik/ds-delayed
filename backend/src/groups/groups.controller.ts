@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common'
+import { Controller, Get, Post, Delete, Body, Param } from '@nestjs/common'
 import { GroupsService } from './groups.service'
 import { CreateGroupDto } from './dto/create-group.dto'
 import { Group } from './entities/group.entity'
@@ -15,5 +15,10 @@ export class GroupsController {
   @Get()
   findAll(): Promise<Group[]> {
     return this.groupsService.findAll()
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string): Promise<void> {
+    return this.groupsService.remove(id)
   }
 } 

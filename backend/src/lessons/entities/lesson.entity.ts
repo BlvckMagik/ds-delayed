@@ -1,21 +1,30 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm'
-import { Group } from '../../groups/entities/group.entity'
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { Group } from '../../groups/entities/group.entity';
 
 @Entity()
 export class Lesson {
   @PrimaryGeneratedColumn('uuid')
-  id: string
+  id: string;
 
   @Column()
-  name: string
+  name: string;
 
   @Column()
-  time: string
+  dayOfWeek: number;
 
   @Column()
-  groupId: string
+  time: string;
 
-  @ManyToOne(() => Group, group => group.lessons)
+  @Column()
+  groupId: string;
+
+  @ManyToOne(() => Group, (group) => group.lessons)
   @JoinColumn({ name: 'groupId' })
-  group: Group
-} 
+  group: Group;
+}

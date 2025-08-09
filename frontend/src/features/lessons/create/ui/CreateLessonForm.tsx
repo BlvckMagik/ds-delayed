@@ -13,32 +13,36 @@ import {
   Select,
   MenuItem,
 } from '@mui/material'
-import { DateTimePicker } from '@/shared/ui/DateTimePicker'
 import { useCreateLessonMutation, useGetGroupsQuery } from '@/shared/store/api'
 import { CreateLessonRequest } from '@/entities/lesson'
+
+const dayNames = [
+  'Неділя',
+  'Понеділок', 
+  'Вівторок',
+  'Середа',
+  'Четвер',
+  'П\'ятниця',
+  'Субота'
+]
 
 export function CreateLessonForm() {
   const [formData, setFormData] = useState<CreateLessonRequest>({
     name: '',
+    dayOfWeek: 1,
     time: '',
     groupId: '',
   })
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   
   const [createLesson, { isLoading, error }] = useCreateLessonMutation()
   const { data: groups } = useGetGroupsQuery()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!selectedDate) return
     
     try {
-      await createLesson({
-        ...formData,
-        time: selectedDate.toISOString(),
-      }).unwrap()
-      setFormData({ name: '', time: '', groupId: '' })
-      setSelectedDate(null)
+      await createLesson(formData).unwrap()
+      setFormData({ name: '', dayOfWeek: 1, time: '', groupId: '' })
     } catch (err) {
       console.error('Failed to create lesson:', err)
     }
@@ -72,11 +76,29 @@ export function CreateLessonForm() {
           required
         />
         
-        <DateTimePicker
-          label="Час заняття"
-          value={selectedDate}
-          onChange={(newValue) => setSelectedDate(newValue)}
+        <FormControl fullWidth margin="normal" required>
+          <InputLabel>День тижня</InputLabel>
+          <Select
+            value={formData.dayOfWeek}
+            label="День тижня"
+            onChange={(e) => setFormData(prev => ({ ...prev, dayOfWeek: e.target.value as number }))}
+          >
+            {dayNames.map((day, index) => (
+              <MenuItem key={index} value={index}>
+                {day}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <TextField
+          fullWidth
+          label="Час (HH:MM)"
+          value={formData.time}
+          onChange={handleChange('time')}
+          margin="normal"
           required
+          placeholder="14:30"
         />
         
         <FormControl fullWidth margin="normal" required>
@@ -97,7 +119,7 @@ export function CreateLessonForm() {
         <Button
           type="submit"
           variant="contained"
-          disabled={isLoading || !selectedDate}
+          disabled={isLoading}
           sx={{ mt: 2 }}
         >
           {isLoading ? 'Створення...' : 'Створити заняття'}
