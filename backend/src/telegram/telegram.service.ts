@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { Cron, CronExpression } from '@nestjs/schedule'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository, LessThanOrEqual } from 'typeorm'
+import { Repository } from 'typeorm'
 import TelegramBot from 'node-telegram-bot-api'
 import { format, formatInTimeZone } from 'date-fns-tz'
 import { uk } from 'date-fns/locale'
@@ -11,17 +11,30 @@ import { Group } from '../groups/entities/group.entity'
 @Injectable()
 export class TelegramService {
   private readonly logger = new Logger(TelegramService.name)
-  private bots: Map<string, TelegramBot> = new Map()
+  private bot: TelegramBot | null = null
+  private readonly botToken = process.env.TELEGRAM_BOT_TOKEN
 
   constructor(
     @InjectRepository(Lesson)
     private lessonsRepository: Repository<Lesson>,
     @InjectRepository(Group)
     private groupsRepository: Repository<Group>,
-  ) {}
+  ) {
+    if (!this.botToken) {
+      this.logger.error('TELEGRAM_BOT_TOKEN не налаштований')
+    } else {
+      this.bot = new TelegramBot(this.botToken, { polling: false })
+      this.logger.log('Telegram бот ініціалізовано')
+    }
+  }
 
   @Cron(CronExpression.EVERY_MINUTE)
   async handleScheduledLessons() {
+    if (!this.bot) {
+      this.logger.error('Бот не ініціалізовано')
+      return
+    }
+
     const now = new Date()
     const currentTime = format(now, 'HH:mm')
     const currentDayOfWeek = now.getDay()
@@ -42,23 +55,17 @@ export class TelegramService {
   }
 
   private async sendLessonReminder(lesson: Lesson) {
+    if (!this.bot) return
+
     try {
-      const bot = this.getBot(lesson.group.token)
       const message = this.createLessonMessage(lesson)
       
-      await bot.sendMessage(lesson.groupId, message, { parse_mode: 'HTML' })
-      this.logger.log(`Sent reminder for lesson: ${lesson.name}`)
+      // Надсилаємо повідомлення в чат групи
+      await this.bot.sendMessage(lesson.group.chatId, message, { parse_mode: 'HTML' })
+      this.logger.log(`Sent reminder for lesson: ${lesson.name} to chat: ${lesson.group.chatId}`)
     } catch (error) {
       this.logger.error(`Failed to send reminder for lesson: ${lesson.name}`, error)
     }
-  }
-
-  private getBot(token: string): TelegramBot {
-    if (!this.bots.has(token)) {
-      const bot = new TelegramBot(token, { polling: false })
-      this.bots.set(token, bot)
-    }
-    return this.bots.get(token)!
   }
 
   private createLessonMessage(lesson: Lesson): string {

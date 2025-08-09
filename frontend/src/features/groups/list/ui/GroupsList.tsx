@@ -79,7 +79,7 @@ export function GroupsList() {
               <ListItem key={group.id} divider>
                 <ListItemText
                   primary={group.name}
-                  secondary={`Meet: ${group.meetLink}`}
+                  secondary={`Meet: ${group.meetLink} | Chat ID: ${group.chatId}`}
                 />
                 <ListItemSecondaryAction>
                   <IconButton

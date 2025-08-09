@@ -1,20 +1,20 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
-import { Lesson } from '../../lessons/entities/lesson.entity'
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Lesson } from '../../lessons/entities/lesson.entity';
 
 @Entity()
 export class Group {
   @PrimaryGeneratedColumn('uuid')
-  id: string
+  id: string;
 
   @Column()
-  name: string
+  name: string;
 
   @Column()
-  meetLink: string
+  meetLink: string;
 
   @Column()
-  token: string
+  chatId: string;
 
-  @OneToMany(() => Lesson, lesson => lesson.group)
-  lessons: Lesson[]
-} 
+  @OneToMany(() => Lesson, (lesson) => lesson.group)
+  lessons: Lesson[];
+}

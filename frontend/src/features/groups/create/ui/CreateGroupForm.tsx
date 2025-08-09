@@ -16,7 +16,7 @@ export function CreateGroupForm() {
   const [formData, setFormData] = useState<CreateGroupRequest>({
     name: '',
     meetLink: '',
-    token: '',
+    chatId: '',
   })
   const [createGroup, { isLoading, error }] = useCreateGroupMutation()
 
@@ -24,7 +24,7 @@ export function CreateGroupForm() {
     e.preventDefault()
     try {
       await createGroup(formData).unwrap()
-      setFormData({ name: '', meetLink: '', token: '' })
+      setFormData({ name: '', meetLink: '', chatId: '' })
     } catch (err) {
       console.error('Failed to create group:', err)
     }
@@ -67,11 +67,13 @@ export function CreateGroupForm() {
         />
         <TextField
           fullWidth
-          label="Telegram токен"
-          value={formData.token}
-          onChange={handleChange('token')}
+          label="Chat ID"
+          value={formData.chatId}
+          onChange={handleChange('chatId')}
           margin="normal"
           required
+          placeholder="-1001234567890"
+          helperText="ID чату або групи в Telegram"
         />
         <Button
           type="submit"
