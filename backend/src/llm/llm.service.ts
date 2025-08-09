@@ -4,42 +4,55 @@ import axios from 'axios';
 @Injectable()
 export class LlmService {
   private readonly logger = new Logger(LlmService.name);
-  private readonly apiUrl =
-    'https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium';
-  private readonly apiKey = process.env.HUGGING_FACE_API_KEY;
+  private readonly apiUrl = 'https://api.openai.com/v1/chat/completions';
+  private readonly apiKey = process.env.OPENAI_API_KEY;
 
   async generateWish(): Promise<string> {
     try {
       if (!this.apiKey) {
         this.logger.warn(
-          'HUGGING_FACE_API_KEY не налаштований, використовую стандартне побажання',
+          'OPENAI_API_KEY не налаштований, використовую стандартне побажання',
         );
         return this.getDefaultWish();
       }
 
-      const prompt = `Generate a short motivational message in Ukrainian for a lesson. The message should be encouraging and end with an emoji. Keep it under 10 words.`;
-
       const response = await axios.post(
         this.apiUrl,
-        { inputs: prompt },
+        {
+          model: 'gpt-3.5-turbo',
+          messages: [
+            {
+              role: 'system',
+              content:
+                'Ти допомагаєш генерувати короткі мотиваційні побажання українською мовою для занять. Побажання мають бути позитивними, короткими (до 10 слів) та закінчуватися емодзі.',
+            },
+            {
+              role: 'user',
+              content:
+                'Згенеруй коротке мотиваційне побажання українською мовою для заняття. Побажання має бути позитивним та закінчуватися емодзі.',
+            },
+          ],
+          max_tokens: 50,
+          temperature: 0.8,
+        },
         {
           headers: {
             Authorization: `Bearer ${this.apiKey}`,
             'Content-Type': 'application/json',
           },
-          timeout: 10000,
+          timeout: 15000,
         },
       );
 
       if (
         response.data &&
-        response.data[0] &&
-        response.data[0].generated_text
+        response.data.choices &&
+        response.data.choices[0] &&
+        response.data.choices[0].message &&
+        response.data.choices[0].message.content
       ) {
-        const generatedText = response.data[0].generated_text;
-        // Очищаємо текст від промпту та зайвих символів
-        const cleanText = generatedText.replace(prompt, '').trim();
-        return cleanText || this.getDefaultWish();
+        const generatedText = response.data.choices[0].message.content.trim();
+        return generatedText || this.getDefaultWish();
       }
 
       return this.getDefaultWish();
