@@ -1,0 +1,22 @@
+{
+  "name": "ds-delayed",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "pnpm --parallel dev",
+    "build": "pnpm --recursive build",
+    "start": "pnpm --parallel start",
+    "install:all": "pnpm install",
+    "clean": "pnpm --recursive clean",
+    "lint": "pnpm --recursive lint",
+    "test": "pnpm --recursive test"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+} 
