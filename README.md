@@ -73,6 +73,38 @@ pnpm build
 pnpm start
 ```
 
+### Розгортання на Render
+
+#### Швидке розгортання
+
+1. **Перевірка готовності:**
+```bash
+./scripts/check-deployment.sh
+```
+
+2. **Підготовка до розгортання:**
+```bash
+./scripts/deploy-render.sh
+```
+
+3. **Автоматичне розгортання:**
+- Підключіть репозиторій до Render
+- Використайте `render.yaml` для автоматичного налаштування
+- Або створіть сервіси вручну згідно з `RENDER_DEPLOYMENT.md`
+
+#### Ручне розгортання
+
+Детальні інструкції дивіться в [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md)
+
+#### CI/CD
+
+Налаштуйте автоматичне розгортання через GitHub Actions:
+1. Додайте секрети в GitHub:
+   - `RENDER_API_KEY`
+   - `RENDER_BACKEND_SERVICE_ID`
+   - `RENDER_FRONTEND_SERVICE_ID`
+2. Push в `main` гілку автоматично запустить розгортання
+
 ## Функціональність
 
 ### Групи

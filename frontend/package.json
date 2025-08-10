@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy:render": "pnpm run build && echo 'Frontend готовий для розгортання на Render'"
   },
   "dependencies": {
     "next": "14.0.0",

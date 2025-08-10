@@ -11,7 +11,7 @@ import { GroupsService } from './groups.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { Group } from './entities/group.entity';
 
-@Controller('api/groups')
+@Controller('groups')
 export class GroupsController {
   constructor(private readonly groupsService: GroupsService) {}
 

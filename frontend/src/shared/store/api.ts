@@ -18,7 +18,11 @@ export interface Lesson {
 
 export const api = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001/api' }),
+  baseQuery: fetchBaseQuery({ 
+    baseUrl: process.env.NEXT_PUBLIC_API_URL 
+      ? `${process.env.NEXT_PUBLIC_API_URL}/api`
+      : 'http://localhost:3001/api'
+  }),
   tagTypes: ['Groups', 'Lessons'],
   endpoints: (builder) => ({
     getGroups: builder.query<Group[], void>({
