@@ -96,13 +96,21 @@ pnpm start
 
 ## API Endpoints
 
+### Системні
+- `GET /` - Перевірка роботи API
+- `GET /health` - Health check з перевіркою бази даних
+
 ### Групи
 - `GET /api/groups` - Отримати всі групи
 - `POST /api/groups` - Створити групу
+- `PUT /api/groups/:id` - Оновити групу
+- `DELETE /api/groups/:id` - Видалити групу
 
 ### Заняття
 - `GET /api/lessons` - Отримати всі заняття
 - `POST /api/lessons` - Створити заняття
+- `PUT /api/lessons/:id` - Оновити заняття
+- `DELETE /api/lessons/:id` - Видалити заняття
 
 ## Налаштування Telegram
 
