@@ -10,6 +10,7 @@
     "dev": "pnpm --parallel dev",
     "build": "pnpm --recursive build",
     "start": "pnpm --parallel start",
+    "start:prod": "pnpm --parallel start:prod",
     "install:all": "pnpm install",
     "clean": "pnpm --recursive clean",
     "lint": "pnpm --recursive lint",

@@ -113,6 +113,7 @@ docker-compose -f docker-compose.backend.yml up --build
 **Примітка:** 
 - Якщо виникають проблеми з Docker збіркою, дивіться [DOCKER_TROUBLESHOOTING.md](./DOCKER_TROUBLESHOOTING.md)
 - **Якщо Docker не запущений** - використовуйте локальну розробку: [LOCAL_DEVELOPMENT.md](./LOCAL_DEVELOPMENT.md)
+- ✅ **Виправлено:** Проблема з `start:prod` скриптом - Dockerfile тепер правильно запускає backend
 
 #### Запуск контейнерів
 

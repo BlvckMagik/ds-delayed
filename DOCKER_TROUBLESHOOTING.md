@@ -9,6 +9,16 @@ ERROR: failed to solve: failed to compute cache key: failed to calculate checksu
 ## Причина
 Dockerfile знаходиться в папці `backend/`, але намагається копіювати файли з батьківської директорії (`../`). Контекст збірки Docker обмежений до папки `backend/`, тому файли `package.json`, `pnpm-lock.yaml` та `pnpm-workspace.yaml` недоступні.
 
+## Додаткова проблема
+Після виправлення контексту збірки виникла помилка:
+```
+ERR_PNPM_NO_SCRIPT Missing script: start:prod
+```
+
+**Причина:** Dockerfile намагався запустити `pnpm run start:prod` в кореневій директорії, але цей скрипт існує тільки в `backend/package.json`.
+
+**Рішення:** Оновлено Dockerfile для прямого запуску `node dist/main` замість `pnpm run start:prod`.
+
 ## Рішення
 
 ### Варіант 1: Автоматична підготовка файлів (рекомендовано)
@@ -40,8 +50,8 @@ docker-compose -f docker-compose.backend.yml up --build
 ```
 
 ## Структура файлів
-- `backend/Dockerfile` - основний Dockerfile
-- `backend/Dockerfile.simple` - спрощений варіант
+- `backend/Dockerfile` - основний Dockerfile (виправлено)
+- `backend/Dockerfile.simple` - спрощений варіант (виправлено)
 - `backend/.dockerignore` - налаштування Docker контексту
 - `docker-compose.backend.yml` - docker-compose з правильним контекстом
 - `scripts/build-backend.sh` - скрипт для автоматичної збірки
@@ -52,6 +62,7 @@ docker-compose -f docker-compose.backend.yml up --build
 1. **Скрипт `prepare-docker.sh`** копіює необхідні файли з кореневої директорії в `backend/`
 2. **Скрипт `build-backend.sh`** автоматично викликає підготовку та запускає збірку
 3. **Dockerfile** тепер знаходить всі необхідні файли в поточній директорії
+4. **CMD** запускає `node dist/main` замість `pnpm run start:prod`
 
 ## Перевірка
 Після успішної збірки можна запустити контейнер:
@@ -62,4 +73,5 @@ docker run -p 3001:3001 ds-delayed-backend
 ## Примітки
 - Файли `package.json`, `pnpm-lock.yaml` та `pnpm-workspace.yaml` повинні бути в папці `backend/` перед збіркою
 - Скрипт `prepare-docker.sh` автоматично копіює ці файли
-- Для продакшн збірки рекомендується використовувати `./scripts/build-backend.sh` 
+- Для продакшн збірки рекомендується використовувати `./scripts/build-backend.sh`
+- Dockerfile тепер правильно запускає backend без залежності від pnpm скриптів 

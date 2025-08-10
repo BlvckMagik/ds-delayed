@@ -27,5 +27,5 @@ RUN pnpm prune --prod
 # Відкриваємо порт
 EXPOSE 3001
 
-# Запускаємо додаток
-CMD ["pnpm", "run", "start:prod"] 
+# Запускаємо backend додаток
+CMD ["node", "dist/main"] 
