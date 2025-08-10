@@ -4,9 +4,9 @@ FROM node:18-alpine
 # Встановлюємо робочу директорію
 WORKDIR /app
 
-# Копіюємо package.json та pnpm-lock.yaml
-COPY package*.json ./
-COPY pnpm-lock.yaml ./
+# Копіюємо package.json та pnpm-lock.yaml з кореневої директорії
+COPY ../package*.json ./
+COPY ../pnpm-lock.yaml ./
 
 # Встановлюємо pnpm
 RUN npm install -g pnpm
