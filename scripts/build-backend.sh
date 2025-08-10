@@ -20,9 +20,8 @@ fi
 
 echo "🐳 Запуск збірки Docker..."
 
-# Збираємо backend з папки backend
-cd backend
-docker build -t ds-delayed-backend .
+# Збираємо backend з кореневої директорії з правильним контекстом
+docker build -f backend/Dockerfile -t ds-delayed-backend .
 
 if [ $? -eq 0 ]; then
     echo ""
@@ -32,7 +31,6 @@ if [ $? -eq 0 ]; then
     echo "docker run -p 3001:3001 ds-delayed-backend"
     echo ""
     echo "Або через Docker Compose:"
-    echo "cd .."
     echo "docker-compose -f docker-compose.backend.yml up"
 else
     echo "❌ Помилка при збірці Docker образу"

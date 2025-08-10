@@ -1,0 +1,29 @@
+# Ігноруємо все за замовчуванням
+*
+
+# Включаємо тільки файли, необхідні для backend збірки
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!backend/
+!nest-cli.json
+!tsconfig.json
+
+# Ігноруємо зайві файли в backend
+backend/node_modules/
+backend/dist/
+backend/.env
+backend/.env.example
+backend/.gitignore
+backend/.eslintrc.js
+backend/.prettierrc
+backend/Dockerfile*
+backend/.dockerignore
+
+# Ігноруємо frontend
+frontend/
+
+# Ігноруємо скрипти та документацію
+scripts/
+*.md
+.git/ 
