@@ -30,6 +30,11 @@ ds-delayed/
 - node-telegram-bot-api
 - date-fns
 
+### DevOps
+- Docker
+- Docker Compose
+- pnpm workspaces
+
 ## Встановлення
 
 1. Клонуйте репозиторій:
@@ -71,6 +76,35 @@ pnpm start:dev
 ```bash
 pnpm build
 pnpm start
+```
+
+### Docker
+
+#### Збірка Backend
+
+Для збірки backend Docker образу:
+
+```bash
+# Варіант 1: З кореневої директорії (рекомендовано)
+docker build -f backend/Dockerfile -t ds-delayed-backend .
+
+# Варіант 2: Використання готового скрипта
+./scripts/build-backend.sh
+
+# Варіант 3: Docker Compose
+docker-compose -f docker-compose.backend.yml up --build
+```
+
+**Примітка:** Якщо виникають проблеми з Docker збіркою, дивіться [DOCKER_TROUBLESHOOTING.md](./DOCKER_TROUBLESHOOTING.md)
+
+#### Запуск контейнерів
+
+```bash
+# Запуск backend
+docker run -p 3001:3001 ds-delayed-backend
+
+# Запуск з PostgreSQL
+docker-compose -f docker-compose.backend.yml up
 ```
 
 ### Розгортання на Render
