@@ -4,25 +4,23 @@ FROM node:18-alpine
 # Встановлюємо робочу директорію
 WORKDIR /app
 
-# Копіюємо package.json та pnpm-lock.yaml
-COPY package*.json ./
+# Копіюємо backend package.json та pnpm-lock.yaml
+COPY package.json ./
 COPY pnpm-lock.yaml ./
-COPY pnpm-workspace.yaml ./
 
 # Встановлюємо pnpm
 RUN npm install -g pnpm
 
-# Встановлюємо залежності
+# Встановлюємо залежності backend
 RUN pnpm install
 
-# Копіюємо backend файли (з кореневого контексту)
-COPY backend/src/ ./backend/src/
-COPY backend/nest-cli.json ./backend/
-COPY backend/tsconfig.json ./backend/
-COPY backend/package.json ./backend/
+# Копіюємо backend файли
+COPY src/ ./src/
+COPY nest-cli.json ./
+COPY tsconfig.json ./
 
 # Збираємо backend додаток
-RUN cd backend && pnpm run build
+RUN pnpm run build
 
 # Видаляємо dev залежності
 RUN pnpm prune --prod
@@ -31,4 +29,4 @@ RUN pnpm prune --prod
 EXPOSE 3001
 
 # Запускаємо backend додаток
-CMD ["node", "backend/dist/main"] 
+CMD ["node", "dist/main"] 
