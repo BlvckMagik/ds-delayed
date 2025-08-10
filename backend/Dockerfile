@@ -15,8 +15,10 @@ RUN npm install -g pnpm
 # Встановлюємо залежності
 RUN pnpm install
 
-# Копіюємо код додатку
-COPY . .
+# Копіюємо тільки backend файли
+COPY backend/ ./backend/
+COPY nest-cli.json ./
+COPY tsconfig.json ./
 
 # Збираємо backend додаток
 RUN cd backend && pnpm run build
