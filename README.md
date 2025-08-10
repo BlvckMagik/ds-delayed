@@ -115,6 +115,7 @@ docker-compose -f docker-compose.backend.yml up --build
 - **Якщо Docker не запущений** - використовуйте локальну розробку: [LOCAL_DEVELOPMENT.md](./LOCAL_DEVELOPMENT.md)
 - ✅ **Виправлено:** Проблема з `start:prod` скриптом - Dockerfile тепер правильно запускає backend
 - ✅ **Виправлено:** Проблема з `--frozen-lockfile` - тепер використовується звичайний `pnpm install`
+- ✅ **Виправлено:** Проблема з шляхом до `dist/main` - тепер збірка виконується в правильній директорії
 
 #### Запуск контейнерів
 

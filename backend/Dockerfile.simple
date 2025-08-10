@@ -18,8 +18,8 @@ RUN pnpm install
 # Копіюємо код додатку
 COPY . .
 
-# Збираємо додаток
-RUN pnpm run build
+# Збираємо backend додаток
+RUN cd backend && pnpm run build
 
 # Видаляємо dev залежності
 RUN pnpm prune --prod
@@ -28,4 +28,4 @@ RUN pnpm prune --prod
 EXPOSE 3001
 
 # Запускаємо backend додаток
-CMD ["node", "dist/main"] 
+CMD ["node", "backend/dist/main"] 

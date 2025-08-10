@@ -32,6 +32,21 @@ ERR_PNPM_OUTDATED_LOCKFILE Cannot install with "frozen-lockfile" because pnpm-lo
 2. Змінено Dockerfile з `pnpm install --frozen-lockfile` на `pnpm install`
 3. Це дозволяє pnpm автоматично синхронізувати залежності
 
+### Проблема з шляхом до dist/main
+Після виправлення залежностей виникла помилка:
+```
+Error: Cannot find module '/app/dist/main'
+```
+
+**Причина:** 
+1. `pnpm run build` виконувався в кореневій директорії замість backend
+2. Шлях до зібраного файлу був неправильним
+
+**Рішення:** 
+1. Змінено збірку на `cd backend && pnpm run build`
+2. Оновлено CMD на `node backend/dist/main`
+3. Тепер збірка виконується в правильній директорії
+
 ## Рішення
 
 ### Варіант 1: Автоматична підготовка файлів (рекомендовано)
@@ -75,8 +90,9 @@ docker-compose -f docker-compose.backend.yml up --build
 1. **Скрипт `prepare-docker.sh`** копіює необхідні файли з кореневої директорії в `backend/`
 2. **Скрипт `build-backend.sh`** автоматично викликає підготовку та запускає збірку
 3. **Dockerfile** тепер знаходить всі необхідні файли в поточній директорії
-4. **CMD** запускає `node dist/main` замість `pnpm run start:prod`
+4. **CMD** запускає `node backend/dist/main` замість `pnpm run start:prod`
 5. **pnpm install** без `--frozen-lockfile` дозволяє автоматично синхронізувати залежності
+6. **Збірка** виконується в `backend/` директорії для правильного створення `dist/`
 
 ## Перевірка
 Після успішної збірки можна запустити контейнер:
