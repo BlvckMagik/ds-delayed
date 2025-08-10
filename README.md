@@ -52,6 +52,14 @@ pnpm install
 
 ### Розробка
 
+#### Автоматичний запуск (рекомендовано)
+```bash
+# Запуск через скрипт - автоматично запустить frontend та backend
+./scripts/dev.sh
+```
+
+#### Ручний запуск
+
 Запустіть фронтенд та бекенд одночасно:
 ```bash
 pnpm dev
@@ -71,6 +79,8 @@ cd backend
 pnpm start:dev
 ```
 
+**Детальні інструкції:** [LOCAL_DEVELOPMENT.md](./LOCAL_DEVELOPMENT.md)
+
 ### Продакшн
 
 ```bash
@@ -85,17 +95,24 @@ pnpm start
 Для збірки backend Docker образу:
 
 ```bash
-# Варіант 1: З кореневої директорії (рекомендовано)
-docker build -f backend/Dockerfile -t ds-delayed-backend .
-
-# Варіант 2: Використання готового скрипта
+# Варіант 1: Автоматична збірка (рекомендовано)
 ./scripts/build-backend.sh
 
-# Варіант 3: Docker Compose
+# Варіант 2: Ручна підготовка + збірка
+./scripts/prepare-docker.sh
+cd backend
+docker build -t ds-delayed-backend .
+
+# Варіант 3: З кореневої директорії
+docker build -f backend/Dockerfile -t ds-delayed-backend .
+
+# Варіант 4: Docker Compose
 docker-compose -f docker-compose.backend.yml up --build
 ```
 
-**Примітка:** Якщо виникають проблеми з Docker збіркою, дивіться [DOCKER_TROUBLESHOOTING.md](./DOCKER_TROUBLESHOOTING.md)
+**Примітка:** 
+- Якщо виникають проблеми з Docker збіркою, дивіться [DOCKER_TROUBLESHOOTING.md](./DOCKER_TROUBLESHOOTING.md)
+- **Якщо Docker не запущений** - використовуйте локальну розробку: [LOCAL_DEVELOPMENT.md](./LOCAL_DEVELOPMENT.md)
 
 #### Запуск контейнерів
 

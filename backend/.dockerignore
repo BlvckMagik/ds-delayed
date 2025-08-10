@@ -1,0 +1,11 @@
+# Ігноруємо все, крім потрібних файлів
+*
+
+# Включаємо тільки потрібні файли
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!src/
+!nest-cli.json
+!tsconfig.json
+!test/ 
