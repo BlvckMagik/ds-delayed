@@ -13,7 +13,7 @@ COPY pnpm-workspace.yaml ./
 RUN npm install -g pnpm
 
 # Встановлюємо залежності
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 # Копіюємо код додатку
 COPY . .

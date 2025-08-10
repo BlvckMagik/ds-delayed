@@ -19,6 +19,19 @@ ERR_PNPM_NO_SCRIPT Missing script: start:prod
 
 **Рішення:** Оновлено Dockerfile для прямого запуску `node dist/main` замість `pnpm run start:prod`.
 
+### Проблема з --frozen-lockfile
+Після виправлення скрипта виникла нова помилка:
+```
+ERR_PNPM_OUTDATED_LOCKFILE Cannot install with "frozen-lockfile" because pnpm-lock.yaml is not up to date
+```
+
+**Причина:** `pnpm-lock.yaml` не синхронізований з `package.json` після відновлення оригінального `backend/package.json`.
+
+**Рішення:** 
+1. Оновлено `pnpm-lock.yaml` через `pnpm install`
+2. Змінено Dockerfile з `pnpm install --frozen-lockfile` на `pnpm install`
+3. Це дозволяє pnpm автоматично синхронізувати залежності
+
 ## Рішення
 
 ### Варіант 1: Автоматична підготовка файлів (рекомендовано)
@@ -63,6 +76,7 @@ docker-compose -f docker-compose.backend.yml up --build
 2. **Скрипт `build-backend.sh`** автоматично викликає підготовку та запускає збірку
 3. **Dockerfile** тепер знаходить всі необхідні файли в поточній директорії
 4. **CMD** запускає `node dist/main` замість `pnpm run start:prod`
+5. **pnpm install** без `--frozen-lockfile` дозволяє автоматично синхронізувати залежності
 
 ## Перевірка
 Після успішної збірки можна запустити контейнер:
